@@ -1,11 +1,9 @@
-ARG BUILD_FROM=ghcr.io/home-assistant/amd64-base-python:3.11-alpine3.19
-FROM $BUILD_FROM
-
-ENV LANG C.UTF-8
+FROM python:3.11-alpine
 
 WORKDIR /app
-COPY server.py /app/server.py
-COPY run.sh /app/run.sh
-RUN chmod +x /app/run.sh
 
-CMD ["/app/run.sh"]
+COPY server.py /app/server.py
+
+EXPOSE 10086 7896
+
+CMD ["python3", "/app/server.py", "serve", "--port", "10086", "--web-port", "7896"]
