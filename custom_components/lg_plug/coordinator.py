@@ -55,6 +55,7 @@ class LgPlugDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         """Return authentication params."""
         params: dict[str, str] = {}
         if self.token:
+            params["t"] = self.token
             params["token"] = self.token
         return params
 
@@ -92,49 +93,76 @@ class LgPlugDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
 
     def _normalize_data(self, data: dict[str, Any]) -> None:
         """Normalize raw response data into consistent schema."""
+        # The server returns {"devices": [{...}], "local_ip": ..., "port": ...}
+        dev: dict[str, Any] = data
+        if "devices" in data and isinstance(data["devices"], list) and len(data["devices"]) > 0:
+            dev = data["devices"][0]
+
         # MAC extraction
-        mac = str(data.get("mac") or data.get("id") or "").strip().upper()
+        mac = str(dev.get("mac") or data.get("mac") or "").strip().upper()
         if mac and not self.mac:
             self.mac = mac
 
-        # Normalize outlets: dictionary mapping 1..4 to bool
-        normalized_outlets: dict[int, bool] = {}
-        raw_outlets = data.get("outlets")
+        # Normalize outlets: mapping 1..4 to bool
+        normalized_outlets: dict[int, bool] = {1: False, 2: False, 3: False, 4: False}
+        raw_outlets = dev.get("outlets") or data.get("outlets")
 
         if isinstance(raw_outlets, list):
-            for idx, val in enumerate(raw_outlets, start=1):
-                if idx <= 4:
-                    normalized_outlets[idx] = bool(val)
+            for item in raw_outlets:
+                if isinstance(item, dict):
+                    num = item.get("n")
+                    if num is not None and 1 <= int(num) <= 4:
+                        normalized_outlets[int(num)] = bool(item.get("on", False))
+                elif isinstance(item, bool):
+                    idx = raw_outlets.index(item) + 1
+                    if 1 <= idx <= 4:
+                        normalized_outlets[idx] = item
         elif isinstance(raw_outlets, dict):
             for k, val in raw_outlets.items():
                 try:
                     out_num = int(k)
                     if 1 <= out_num <= 4:
-                        normalized_outlets[out_num] = bool(val)
+                        if isinstance(val, dict):
+                            normalized_outlets[out_num] = bool(val.get("on", False))
+                        else:
+                            normalized_outlets[out_num] = bool(val)
                 except ValueError:
                     pass
-        else:
-            for i in range(1, 5):
-                for key_format in (f"outlet_{i}", f"outlet{i}", f"relay_{i}", f"relay{i}"):
-                    if key_format in data:
-                        normalized_outlets[i] = bool(data[key_format])
-                        break
 
         data["_normalized_outlets"] = normalized_outlets
 
         # Telemetry normalization
-        data["_power_w"] = _extract_float(data, ["watts", "power", "watt", "p_w", "power_w"])
-        data["_energy_kwh"] = _extract_float(data, ["kwh", "energy", "energy_kwh", "total_kwh"])
-        data["_voltage_v"] = _extract_float(data, ["voltage", "volt", "v", "voltage_v"])
-        data["_temp_c"] = _extract_float(data, ["temperature", "temp", "temp_c", "temperature_c"])
-        data["_wifi_signal"] = _extract_float(data, ["wifi", "rssi", "wifi_rssi", "signal"])
-        data["_online"] = bool(data.get("online", True))
+        data["_power_w"] = _extract_float(dev, ["power_w", "watts", "power", "watt", "p_w"])
+        data["_energy_kwh"] = _extract_float(dev, ["energy_kwh", "kwh", "energy", "total_kwh"])
+        data["_voltage_v"] = _extract_float(dev, ["voltage", "voltage_v", "volt", "v"])
+
+        # Temperature: from device root or highest outlet temperature
+        temp = _extract_float(dev, ["temperature", "temp", "temp_c", "temperature_c"])
+        if temp is None and isinstance(raw_outlets, list):
+            temps = [
+                float(o["temp_c"])
+                for o in raw_outlets
+                if isinstance(o, dict) and o.get("temp_c") is not None
+            ]
+            if temps:
+                temp = max(temps)
+        data["_temp_c"] = temp
+
+        data["_wifi_signal"] = _extract_float(dev, ["rssi", "wifi", "wifi_rssi", "signal"])
+        data["_online"] = bool(dev.get("online", True))
 
     async def async_set_outlet(self, outlet_id: int, state: bool) -> bool:
         """Control an outlet (1-4) or master (0)."""
         url = f"{self.base_url}{API_ONOFF}"
+        mac = self.mac
+        if not mac:
+            if "devices" in self.data and isinstance(self.data["devices"], list) and self.data["devices"]:
+                mac = self.data["devices"][0].get("mac", "")
+            else:
+                mac = self.data.get("mac", "")
+
         payload = {
-            "mac": self.mac or self.data.get("mac", ""),
+            "mac": mac,
             "outlet": outlet_id,
             "on": state,
         }
@@ -153,6 +181,7 @@ class LgPlugDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                     )
                     return False
 
+                # Optimistically update cached outlet state
                 if "_normalized_outlets" in self.data:
                     if outlet_id == 0:
                         for idx in range(1, 5):

@@ -58,7 +58,11 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
                 raise CannotConnect(f"HTTP status {response.status}")
 
             resp_data = await response.json()
-            mac = str(resp_data.get("mac") or resp_data.get("id") or "").strip().upper()
+            mac = ""
+            if "devices" in resp_data and isinstance(resp_data["devices"], list) and resp_data["devices"]:
+                mac = str(resp_data["devices"][0].get("mac") or "").strip().upper()
+            if not mac:
+                mac = str(resp_data.get("mac") or resp_data.get("id") or "").strip().upper()
             return {"title": f"LG-Plug ({mac})" if mac else DEFAULT_NAME, "mac": mac}
 
     except InvalidAuth:
