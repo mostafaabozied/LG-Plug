@@ -80,6 +80,42 @@ SENSOR_TYPES: tuple[LgPlugSensorEntityDescription, ...] = (
         suggested_display_precision=0,
         value_fn=lambda data: data.get("_wifi_signal"),
     ),
+    LgPlugSensorEntityDescription(
+        key="outlet_1_power",
+        translation_key="outlet_1_power",
+        device_class=SensorDeviceClass.POWER,
+        state_class=SensorStateClass.MEASUREMENT,
+        native_unit_of_measurement=UnitOfPower.WATT,
+        suggested_display_precision=1,
+        value_fn=lambda data: data.get("_outlet_power", {}).get(1, 0.0),
+    ),
+    LgPlugSensorEntityDescription(
+        key="outlet_2_power",
+        translation_key="outlet_2_power",
+        device_class=SensorDeviceClass.POWER,
+        state_class=SensorStateClass.MEASUREMENT,
+        native_unit_of_measurement=UnitOfPower.WATT,
+        suggested_display_precision=1,
+        value_fn=lambda data: data.get("_outlet_power", {}).get(2, 0.0),
+    ),
+    LgPlugSensorEntityDescription(
+        key="outlet_3_power",
+        translation_key="outlet_3_power",
+        device_class=SensorDeviceClass.POWER,
+        state_class=SensorStateClass.MEASUREMENT,
+        native_unit_of_measurement=UnitOfPower.WATT,
+        suggested_display_precision=1,
+        value_fn=lambda data: data.get("_outlet_power", {}).get(3, 0.0),
+    ),
+    LgPlugSensorEntityDescription(
+        key="outlet_4_power",
+        translation_key="outlet_4_power",
+        device_class=SensorDeviceClass.POWER,
+        state_class=SensorStateClass.MEASUREMENT,
+        native_unit_of_measurement=UnitOfPower.WATT,
+        suggested_display_precision=1,
+        value_fn=lambda data: data.get("_outlet_power", {}).get(4, 0.0),
+    ),
 )
 
 

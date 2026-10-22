@@ -63,6 +63,18 @@
       },
       "wifi_signal": {
         "name": "إشارة الوايفاي"
+      },
+      "outlet_1_power": {
+        "name": "قدرة المخرج 1"
+      },
+      "outlet_2_power": {
+        "name": "قدرة المخرج 2"
+      },
+      "outlet_3_power": {
+        "name": "قدرة المخرج 3"
+      },
+      "outlet_4_power": {
+        "name": "قدرة المخرج 4"
       }
     },
     "binary_sensor": {

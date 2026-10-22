@@ -63,6 +63,18 @@
       },
       "wifi_signal": {
         "name": "Wi-Fi Signal"
+      },
+      "outlet_1_power": {
+        "name": "Outlet 1 Power"
+      },
+      "outlet_2_power": {
+        "name": "Outlet 2 Power"
+      },
+      "outlet_3_power": {
+        "name": "Outlet 3 Power"
+      },
+      "outlet_4_power": {
+        "name": "Outlet 4 Power"
       }
     },
     "binary_sensor": {

@@ -151,6 +151,16 @@ class LgPlugDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         data["_wifi_signal"] = _extract_float(dev, ["rssi", "wifi", "wifi_rssi", "signal"])
         data["_online"] = bool(dev.get("online", True))
 
+        # Per-outlet power extraction
+        outlet_power: dict[int, float] = {1: 0.0, 2: 0.0, 3: 0.0, 4: 0.0}
+        if isinstance(raw_outlets, list):
+            for item in raw_outlets:
+                if isinstance(item, dict):
+                    num = item.get("n")
+                    if num is not None and 1 <= int(num) <= 4:
+                        outlet_power[int(num)] = float(item.get("power_w", 0.0) or 0.0)
+        data["_outlet_power"] = outlet_power
+
     async def async_set_outlet(self, outlet_id: int, state: bool) -> bool:
         """Control an outlet (1-4) or master (0)."""
         url = f"{self.base_url}{API_ONOFF}"
