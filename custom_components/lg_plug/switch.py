@@ -1,4 +1,4 @@
-"""Switch platform for PowerK."""
+"""Switch platform for LG-Plug."""
 from __future__ import annotations
 
 import logging
@@ -12,7 +12,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN, MANUFACTURER, MODEL
-from .coordinator import PowerkDataUpdateCoordinator
+from .coordinator import LgPlugDataUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -22,29 +22,29 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Set up the PowerK switch platform."""
-    coordinator: PowerkDataUpdateCoordinator = hass.data[DOMAIN][entry.entry_id]
+    """Set up the LG-Plug switch platform."""
+    coordinator: LgPlugDataUpdateCoordinator = hass.data[DOMAIN][entry.entry_id]
 
     entities: list[SwitchEntity] = []
 
     # Individual outlets 1 to 4
     for outlet_id in range(1, 5):
-        entities.append(PowerkSwitch(coordinator, entry, outlet_id))
+        entities.append(LgPlugSwitch(coordinator, entry, outlet_id))
 
     # Master switch (All outlets)
-    entities.append(PowerkMasterSwitch(coordinator, entry))
+    entities.append(LgPlugMasterSwitch(coordinator, entry))
 
     async_add_entities(entities)
 
 
-class PowerkBaseEntity(CoordinatorEntity[PowerkDataUpdateCoordinator]):
-    """Base entity for PowerK."""
+class LgPlugBaseEntity(CoordinatorEntity[LgPlugDataUpdateCoordinator]):
+    """Base entity for LG-Plug."""
 
     _attr_has_entity_name = True
 
     def __init__(
         self,
-        coordinator: PowerkDataUpdateCoordinator,
+        coordinator: LgPlugDataUpdateCoordinator,
         entry: ConfigEntry,
     ) -> None:
         """Initialize."""
@@ -57,10 +57,10 @@ class PowerkBaseEntity(CoordinatorEntity[PowerkDataUpdateCoordinator]):
         mac = self.coordinator.mac or self.entry.entry_id
         return DeviceInfo(
             identifiers={(DOMAIN, mac)},
-            name=f"Korean Smart Strip ({mac})" if self.coordinator.mac else "Korean Smart Strip",
+            name=f"LG-Plug ({mac})" if self.coordinator.mac else "LG-Plug",
             manufacturer=MANUFACTURER,
             model=MODEL,
-            sw_version="PowerK 1.0",
+            sw_version="1.0.0",
         )
 
     @property
@@ -72,14 +72,14 @@ class PowerkBaseEntity(CoordinatorEntity[PowerkDataUpdateCoordinator]):
         )
 
 
-class PowerkSwitch(PowerkBaseEntity, SwitchEntity):
-    """Representation of an individual PowerK outlet switch."""
+class LgPlugSwitch(LgPlugBaseEntity, SwitchEntity):
+    """Representation of an individual LG-Plug outlet switch."""
 
     _attr_device_class = SwitchDeviceClass.OUTLET
 
     def __init__(
         self,
-        coordinator: PowerkDataUpdateCoordinator,
+        coordinator: LgPlugDataUpdateCoordinator,
         entry: ConfigEntry,
         outlet_id: int,
     ) -> None:
@@ -106,14 +106,14 @@ class PowerkSwitch(PowerkBaseEntity, SwitchEntity):
         await self.coordinator.async_set_outlet(self.outlet_id, False)
 
 
-class PowerkMasterSwitch(PowerkBaseEntity, SwitchEntity):
+class LgPlugMasterSwitch(LgPlugBaseEntity, SwitchEntity):
     """Representation of the master switch (controlling all outlets)."""
 
     _attr_device_class = SwitchDeviceClass.SWITCH
 
     def __init__(
         self,
-        coordinator: PowerkDataUpdateCoordinator,
+        coordinator: LgPlugDataUpdateCoordinator,
         entry: ConfigEntry,
     ) -> None:
         """Initialize master switch."""

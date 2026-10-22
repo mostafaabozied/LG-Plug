@@ -2,8 +2,8 @@
   "config": {
     "step": {
       "user": {
-        "title": "Connect to PowerK Smart Strip",
-        "description": "Enter the connection details for your PowerK server running powerk.py.",
+        "title": "Connect to LG-Plug",
+        "description": "Enter the connection details for your LG-Plug device server.",
         "data": {
           "host": "Host / IP Address",
           "port": "Port",
@@ -12,18 +12,18 @@
       }
     },
     "error": {
-      "cannot_connect": "Failed to connect to the PowerK server. Please check the IP and port.",
+      "cannot_connect": "Failed to connect to the LG-Plug server. Please check the IP and port.",
       "invalid_auth": "Invalid authentication token.",
       "unknown": "An unexpected error occurred."
     },
     "abort": {
-      "already_configured": "This PowerK device is already configured."
+      "already_configured": "This LG-Plug device is already configured."
     }
   },
   "options": {
     "step": {
       "init": {
-        "title": "PowerK Options",
+        "title": "LG-Plug Options",
         "data": {
           "scan_interval": "Data polling interval (in seconds, 2-60)"
         }

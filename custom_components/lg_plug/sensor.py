@@ -1,4 +1,4 @@
-"""Sensor platform for PowerK."""
+"""Sensor platform for LG-Plug."""
 from __future__ import annotations
 
 from collections.abc import Callable
@@ -23,19 +23,19 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import DOMAIN
-from .coordinator import PowerkDataUpdateCoordinator
-from .switch import PowerkBaseEntity
+from .coordinator import LgPlugDataUpdateCoordinator
+from .switch import LgPlugBaseEntity
 
 
 @dataclass(frozen=True, kw_only=True)
-class PowerkSensorEntityDescription(SensorEntityDescription):
-    """Class describing PowerK sensor entities."""
+class LgPlugSensorEntityDescription(SensorEntityDescription):
+    """Class describing LG-Plug sensor entities."""
 
     value_fn: Callable[[dict[str, Any]], float | int | None]
 
 
-SENSOR_TYPES: tuple[PowerkSensorEntityDescription, ...] = (
-    PowerkSensorEntityDescription(
+SENSOR_TYPES: tuple[LgPlugSensorEntityDescription, ...] = (
+    LgPlugSensorEntityDescription(
         key="power",
         translation_key="power",
         device_class=SensorDeviceClass.POWER,
@@ -44,7 +44,7 @@ SENSOR_TYPES: tuple[PowerkSensorEntityDescription, ...] = (
         suggested_display_precision=1,
         value_fn=lambda data: data.get("_power_w"),
     ),
-    PowerkSensorEntityDescription(
+    LgPlugSensorEntityDescription(
         key="energy",
         translation_key="energy",
         device_class=SensorDeviceClass.ENERGY,
@@ -53,7 +53,7 @@ SENSOR_TYPES: tuple[PowerkSensorEntityDescription, ...] = (
         suggested_display_precision=2,
         value_fn=lambda data: data.get("_energy_kwh"),
     ),
-    PowerkSensorEntityDescription(
+    LgPlugSensorEntityDescription(
         key="voltage",
         translation_key="voltage",
         device_class=SensorDeviceClass.VOLTAGE,
@@ -62,7 +62,7 @@ SENSOR_TYPES: tuple[PowerkSensorEntityDescription, ...] = (
         suggested_display_precision=1,
         value_fn=lambda data: data.get("_voltage_v"),
     ),
-    PowerkSensorEntityDescription(
+    LgPlugSensorEntityDescription(
         key="temperature",
         translation_key="temperature",
         device_class=SensorDeviceClass.TEMPERATURE,
@@ -71,7 +71,7 @@ SENSOR_TYPES: tuple[PowerkSensorEntityDescription, ...] = (
         suggested_display_precision=1,
         value_fn=lambda data: data.get("_temp_c"),
     ),
-    PowerkSensorEntityDescription(
+    LgPlugSensorEntityDescription(
         key="wifi_signal",
         translation_key="wifi_signal",
         device_class=SensorDeviceClass.SIGNAL_STRENGTH,
@@ -88,26 +88,26 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Set up PowerK sensor entities."""
-    coordinator: PowerkDataUpdateCoordinator = hass.data[DOMAIN][entry.entry_id]
+    """Set up LG-Plug sensor entities."""
+    coordinator: LgPlugDataUpdateCoordinator = hass.data[DOMAIN][entry.entry_id]
 
-    entities: list[PowerkSensor] = []
+    entities: list[LgPlugSensor] = []
     for description in SENSOR_TYPES:
-        entities.append(PowerkSensor(coordinator, entry, description))
+        entities.append(LgPlugSensor(coordinator, entry, description))
 
     async_add_entities(entities)
 
 
-class PowerkSensor(PowerkBaseEntity, SensorEntity):
-    """Representation of a PowerK sensor."""
+class LgPlugSensor(LgPlugBaseEntity, SensorEntity):
+    """Representation of an LG-Plug sensor."""
 
-    entity_description: PowerkSensorEntityDescription
+    entity_description: LgPlugSensorEntityDescription
 
     def __init__(
         self,
-        coordinator: PowerkDataUpdateCoordinator,
+        coordinator: LgPlugDataUpdateCoordinator,
         entry: ConfigEntry,
-        description: PowerkSensorEntityDescription,
+        description: LgPlugSensorEntityDescription,
     ) -> None:
         """Initialize the sensor."""
         super().__init__(coordinator, entry)

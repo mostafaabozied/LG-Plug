@@ -2,8 +2,8 @@
   "config": {
     "step": {
       "user": {
-        "title": "ربط المشترك الذكي PowerK",
-        "description": "أدخل بيانات الاتصال الخاصة بسيرفر PowerK المشغل لـ powerk.py.",
+        "title": "ربط المشترك الذكي LG-Plug",
+        "description": "أدخل بيانات الاتصال الخاصة بسيرفر المشترك الذكي LG-Plug.",
         "data": {
           "host": "عنوان الـ IP أو المضيف",
           "port": "رقم المنفذ (Port)",
@@ -12,7 +12,7 @@
       }
     },
     "error": {
-      "cannot_connect": "تعذر الاتصال بسيرفر PowerK. يرجى التحقق من العنوان والمنفذ.",
+      "cannot_connect": "تعذر الاتصال بسيرفر LG-Plug. يرجى التحقق من العنوان والمنفذ.",
       "invalid_auth": "رمز التحقق (Token) غير صحيح.",
       "unknown": "حدث خطأ غير متوقع."
     },
@@ -23,7 +23,7 @@
   "options": {
     "step": {
       "init": {
-        "title": "خيارات PowerK",
+        "title": "خيارات LG-Plug",
         "data": {
           "scan_interval": "معدل تحديث البيانات (بالثواني، من 2 إلى 60)"
         }

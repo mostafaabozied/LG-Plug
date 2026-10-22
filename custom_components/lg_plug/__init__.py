@@ -1,4 +1,4 @@
-"""The PowerK Korean Smart Strip integration."""
+"""The LG-Plug integration."""
 from __future__ import annotations
 
 import logging
@@ -16,7 +16,7 @@ from .const import (
     DEFAULT_SCAN_INTERVAL,
     DOMAIN,
 )
-from .coordinator import PowerkDataUpdateCoordinator
+from .coordinator import LgPlugDataUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -28,7 +28,7 @@ PLATFORMS: list[Platform] = [
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    """Set up PowerK from a config entry."""
+    """Set up LG-Plug from a config entry."""
     hass.data.setdefault(DOMAIN, {})
 
     host = entry.data[CONF_HOST]
@@ -36,7 +36,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     token = entry.data.get(CONF_TOKEN, "")
     scan_interval = entry.options.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
 
-    coordinator = PowerkDataUpdateCoordinator(
+    coordinator = LgPlugDataUpdateCoordinator(
         hass=hass,
         host=host,
         port=port,

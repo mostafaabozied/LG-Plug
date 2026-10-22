@@ -1,4 +1,4 @@
-"""Config flow for PowerK integration."""
+"""Config flow for LG-Plug integration."""
 from __future__ import annotations
 
 import asyncio
@@ -59,7 +59,7 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
 
             resp_data = await response.json()
             mac = str(resp_data.get("mac") or resp_data.get("id") or "").strip().upper()
-            return {"title": f"PowerK ({mac})" if mac else DEFAULT_NAME, "mac": mac}
+            return {"title": f"LG-Plug ({mac})" if mac else DEFAULT_NAME, "mac": mac}
 
     except InvalidAuth:
         raise
@@ -71,8 +71,8 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
         raise CannotConnect(f"Unknown error: {err}") from err
 
 
-class PowerkConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
-    """Handle a config flow for PowerK."""
+class LgPlugConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
+    """Handle a config flow for LG-Plug."""
 
     VERSION = 1
 
@@ -118,11 +118,11 @@ class PowerkConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         config_entry: config_entries.ConfigEntry,
     ) -> config_entries.OptionsFlow:
         """Create the options flow."""
-        return PowerkOptionsFlowHandler(config_entry)
+        return LgPlugOptionsFlowHandler(config_entry)
 
 
-class PowerkOptionsFlowHandler(config_entries.OptionsFlow):
-    """Handle options for PowerK."""
+class LgPlugOptionsFlowHandler(config_entries.OptionsFlow):
+    """Handle options for LG-Plug."""
 
     def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
         """Initialize options flow."""
