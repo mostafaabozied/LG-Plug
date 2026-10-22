@@ -1,0 +1,26 @@
+name: "LG-Plug Server"
+version: "1.0.0"
+slug: "lg_plug_server"
+description: "Local TCP and REST API Server for LG MTTL-W01 Smart Power Strip"
+url: "https://github.com/mostafaabozied/LG-Plug"
+arch:
+  - aarch64
+  - amd64
+  - armhf
+  - armv7
+  - i386
+startup: services
+boot: auto
+host_network: true
+options:
+  web_port: 7896
+  token: ""
+schema:
+  web_port: int
+  token: str?
+ports:
+  10086/tcp: 10086
+  7896/tcp: 7896
+ports_description:
+  10086/tcp: "Device TCP port"
+  7896/tcp: "Web and REST API port"
