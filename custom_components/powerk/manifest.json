@@ -1,0 +1,12 @@
+{
+  "domain": "powerk",
+  "name": "PowerK Korean Smart Strip",
+  "codeowners": ["@ahmedtohamy1"],
+  "config_flow": true,
+  "documentation": "https://github.com/ahmedtohamy1/powerk",
+  "integration_type": "hub",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/ahmedtohamy1/powerk/issues",
+  "requirements": [],
+  "version": "1.0.0"
+}

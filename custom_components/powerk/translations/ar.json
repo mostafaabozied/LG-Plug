@@ -1,0 +1,74 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "ربط المشترك الذكي PowerK",
+        "description": "أدخل بيانات الاتصال الخاصة بسيرفر PowerK المشغل لـ powerk.py.",
+        "data": {
+          "host": "عنوان الـ IP أو المضيف",
+          "port": "رقم المنفذ (Port)",
+          "token": "رمز التحقق (Token - اختياري إن لم يكن مفعلاً)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "تعذر الاتصال بسيرفر PowerK. يرجى التحقق من العنوان والمنفذ.",
+      "invalid_auth": "رمز التحقق (Token) غير صحيح.",
+      "unknown": "حدث خطأ غير متوقع."
+    },
+    "abort": {
+      "already_configured": "هذا الجهاز تم إعداده مسبقاً بالفعل."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "خيارات PowerK",
+        "data": {
+          "scan_interval": "معدل تحديث البيانات (بالثواني، من 2 إلى 60)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "switch": {
+      "outlet_1": {
+        "name": "المخرج 1"
+      },
+      "outlet_2": {
+        "name": "المخرج 2"
+      },
+      "outlet_3": {
+        "name": "المخرج 3"
+      },
+      "outlet_4": {
+        "name": "المخرج 4"
+      },
+      "master_switch": {
+        "name": "كل المخارج"
+      }
+    },
+    "sensor": {
+      "power": {
+        "name": "القدرة الكهربائية"
+      },
+      "energy": {
+        "name": "إجمالي استهلاك الطاقة"
+      },
+      "voltage": {
+        "name": "الجهد الكهربائي"
+      },
+      "temperature": {
+        "name": "درجة الحرارة"
+      },
+      "wifi_signal": {
+        "name": "إشارة الوايفاي"
+      }
+    },
+    "binary_sensor": {
+      "connectivity": {
+        "name": "حالة الاتصال"
+      }
+    }
+  }
+}

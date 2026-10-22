@@ -1,0 +1,74 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect to PowerK Smart Strip",
+        "description": "Enter the connection details for your PowerK server running powerk.py.",
+        "data": {
+          "host": "Host / IP Address",
+          "port": "Port",
+          "token": "Authentication Token (optional if not set)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect to the PowerK server. Please check the IP and port.",
+      "invalid_auth": "Invalid authentication token.",
+      "unknown": "An unexpected error occurred."
+    },
+    "abort": {
+      "already_configured": "This PowerK device is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "PowerK Options",
+        "data": {
+          "scan_interval": "Data polling interval (in seconds, 2-60)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "switch": {
+      "outlet_1": {
+        "name": "Outlet 1"
+      },
+      "outlet_2": {
+        "name": "Outlet 2"
+      },
+      "outlet_3": {
+        "name": "Outlet 3"
+      },
+      "outlet_4": {
+        "name": "Outlet 4"
+      },
+      "master_switch": {
+        "name": "All Outlets"
+      }
+    },
+    "sensor": {
+      "power": {
+        "name": "Power"
+      },
+      "energy": {
+        "name": "Total Energy"
+      },
+      "voltage": {
+        "name": "Voltage"
+      },
+      "temperature": {
+        "name": "Temperature"
+      },
+      "wifi_signal": {
+        "name": "Wi-Fi Signal"
+      }
+    },
+    "binary_sensor": {
+      "connectivity": {
+        "name": "Connection Status"
+      }
+    }
+  }
+}
